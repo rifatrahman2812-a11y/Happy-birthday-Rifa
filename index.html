@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Magic for Rifa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fce4ec;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Envelope Styling */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background: #ff80ab;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #ff4081;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .envelope-wrapper.open .envelope::before {
+            transform: rotateX(180deg);
+        }
+
+        /* The Hidden Letter */
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 90%;
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            transition: transform 0.8s ease-in-out;
+            z-index: 1;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translateY(-160px);
+            height: 380px;
+            z-index: 3;
+        }
+
+        .letter h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff4081;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .letter p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 15px 0;
+        }
+
+        .cake-emoji { font-size: 40px; }
+
+        /* Floating Heart/GIF Animation */
+        .heart-emoji {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            z-index: 999;
+            animation: flyUp 3s linear forwards;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Instruction Text */
+        .tap-text {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: #ff4081;
+            font-weight: 600;
+            font-size: 14px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .heart-lock {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .envelope-wrapper.open .heart-lock {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" id="envelope">
+        <div class="heart-lock">❤️</div>
+        <div class="envelope"></div>
+        <div class="letter">
+            <h2>Happy Birthday, Rifa!</h2>
+            <p>
+                Wishing you a day as unique as you are on <b>July 14th</b>. 
+                May your journey be filled with endless success, 
+                unwavering joy, and the best of health.
+            </p>
+            <div class="cake-emoji">🎂</div>
+            <p style="font-weight: bold; color: #ff4081;">
+                May all your dreams come true! <br> Keep Shining Forever.
+            </p>
+            <small style="color: #aaa;">With Love & Best Wishes</small>
+        </div>
+        <div class="tap-text">Tap to open your surprise! 💌</div>
+    </div>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        
+        envelope.addEventListener('click', () => {
+            envelope.classList.toggle('open');
+            
+            if(envelope.classList.contains('open')) {
+                // Trigger continuous love emoji burst
+                let burst = setInterval(() => {
+                    createHeart();
+                    if(!envelope.classList.contains('open')) clearInterval(burst);
+                }, 150);
+
+                // Stop burst after 5 seconds to keep it clean
+                setTimeout(() => clearInterval(burst), 5000);
+            }
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-emoji';
+            // Randomly pick between love emojis and heart GIFs (using Unicode for speed)
+            const hearts = ['❤️', '💖', '💝', '✨', '🌸', '💕'];
+            heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
